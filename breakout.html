@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gamedev Canvas Workshop</title>
+    <style>
+        { padding: 0; margin: 0; }
+        canvas {background: #eee; display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="1280" height="720"></canvas>
+    <br>
+    <textarea type="textarea" id="outputbox" cols=40 rows=40></textarea>
+    <script>   
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        const canvasW = canvas.width;
+        const canvasH = canvas.height;
+        let offset = 10;
+        let x = -150;
+        let y = 0;
+        const dx = 2;
+        const dy = 2;
+        let color0n = 0;
+        let color0 = "#"+color0n;
+        var outputStr = "";
+        const outputid = document.getElementById("outputbox");
+        function trace(str){
+
+            outputStr+=str+"\n";
+            myDisplayer();
+        }
+          //mostrar resultado
+        function myDisplayer() {
+            document.getElementById("outputbox").innerHTML = outputStr;
+        };
+
+        function setColor0(n){
+        //rainbow color0
+            let frequency = .3;
+            let k = n;
+            const amplitude = 255/2;
+            const center = amplitude;
+
+            r = Math.sin(frequency*k-y+0)*amplitude+center;
+            g = Math.sin(frequency*k-y+1)*amplitude+center;
+            b = Math.sin(frequency*k+y+4)*amplitude+center;
+            return "rgba("+r+","+g+","+b+",0.1)";
+            
+            
+        }
+
+        function trueRainbow(step){
+            //let intr,intg,intb;
+            //return "color"
+
+        }
+        //stolen code, to study later
+        function byte2Hex(n)
+        {
+            var nybHexString = "0123456789ABCDEF";
+            return String(nybHexString.substr((n >> 4) & 0x0F,1)) + nybHexString.substr(n & 0x0F,1);
+        }
+        function RGB2Color(r,g,b)
+        {
+            return '#' + byte2Hex(r) + byte2Hex(g) + byte2Hex(b);
+        }
+        function makeDivId(id) {
+            return id + "_div";
+        };
+        function sineWave(frequency,y){
+            //default frequency = .3
+            const amplitude = 255/2;
+            const center = amplitude;
+            
+            for (let j = 0; j < 3; ++j){
+                for (let k = 0; k < 3; ++k)
+                {
+                    r = Math.sin(frequency*k+offset+y)*amplitude+center;
+                    g = Math.sin(frequency*k+1+offset+y)*amplitude+center;
+                    b = Math.sin(frequency*k+4+offset+y)*amplitude+center;
+                    return [r,g,b];
+                }
+                
+                frequency+=.06;
+            }     
+            //console.log(document.getElementById(str));      
+        }
+        var l = 0;
+        function draw(){
+            color0 = setColor0(l/2);
+            l++;
+            v = Math.sin(x);
+            v2 = v*v;
+            v3 = 1-(v2)*-1;
+            v4 = v3*v2*v;
+            for(let i = 0;i<5;i++)
+                drawBall(
+                    v3+(offset),
+                    color0,
+                    (i),
+                    (i)
+                );
+            
+            x += dx; 
+            
+            offset = Math.sin(x)+2*3;
+            
+            
+        };
+
+
+
+
+
+
+
+
+
+        //xo= X OFFSET
+        function drawBall(size, color,xo,yo){
+            if(x>canvasW){
+                y+=size*2;
+                x=0;
+            }
+            if(y>canvasH){
+                y=0;
+                x=0;
+                offset-=1;
+            }
+            //circle
+            ctx.beginPath();
+            ctx.arc(x+xo, y+yo, size, 0, Math.PI*2, false);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.closePath();
+        }
+        
+        draw();
+
+        setInterval(draw, 0.1);
+
+        //rect
+        ctx.beginPath();
+        //ctx.rect(x ,y , width, height)
+        ctx.rect(20, 40, 50, 50);
+        ctx.fillStyle = "#000";
+        ctx.fill();
+        ctx.closePath();
+
+      
+
+        //
+        ctx.beginPath();
+        ctx.rect(160, 10, 100, 40);
+        ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";
+        ctx.stroke();
+        ctx.closePath();
+
+
+    </script>
+</body>
+</html>
